@@ -23,29 +23,36 @@ class Matrix{
     cout<<"enter the matrix b:"<<endl;
     for(int i=0;i<n;i++)
     cin>>b[i];
-    solver();
+    to_ref();
     }
-    
-    void solver(){
-        //make the vector A into reduced row echelon form 
-        //the answer will be in vector b
-        for(int i=0;i<n;i++){
-            if(A[i][i]!=0){
-                b[i]=b[i]/A[i][i];
-                for(int k = i;k<n;k++){
-                    A[i][k] = A[i][k]/A[i][i];
+    void to_ref(){
+        for(int i = 0;i<n;i++){
+            if(A[i][i]==0){
+                int j;
+                for( j = i+1;j<n;j++){
+                    if(A[j][i]!=0)    break;
+                }
+                for(int k = 0;k<n;k++){
+                    swap(A[i][k],A[j][k]);
+                    swap(b[i],b[j]);
                 }
             }
-            /*for(int j=i+1;j<n;j++){
-                if(A[j][i]!=0){
-                    for(int k = i;k<n;k++){
-                        
-                    }
-                }
-            }*/
+            float x = A[i][i];
+            b[i] = b[i]/x;
+            for(int j = 0;j<n;j++)    A[i][j] = A[i][j]/x;
+            for(int j = i+1;j<n;j++){
+                float y=A[j][i];
+                b[j] = b[j] - y*b[i];
+                for(int k = 0;k<n;k++)    A[j][k] =  A[j][k] - y*A[i][k] ;
+            }
         }
+        solver();
+    }
+    void solver(){
+        
         display_ans();
     }
+
     void display_ans(){
         cout<<"A"<<endl;
         for(int i=0;i<n;i++){
